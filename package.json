@@ -1,0 +1,31 @@
+{
+  "name": "anymote",
+  "version": "1.0.0",
+  "description": "NodeJS library to interact with AnyMote Home devices",
+  "main": "index.js",
+  "dependencies": {
+    "noble": "^1.6.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jannispl/node-anymote.git"
+  },
+  "keywords": [
+    "anymote",
+    "home",
+    "anymotuino",
+    "infrared",
+    "remote",
+    "control"
+  ],
+  "author": "Jannis Pohl <me@mavedev.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jannispl/node-anymote/issues"
+  },
+  "homepage": "https://github.com/jannispl/node-anymote#readme"
+}
