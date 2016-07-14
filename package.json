@@ -1,6 +1,6 @@
 {
   "name": "anymote",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "NodeJS library to interact with AnyMote Home devices",
   "main": "index.js",
   "dependencies": {

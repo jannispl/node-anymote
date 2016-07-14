@@ -15,6 +15,7 @@ function AnyMote(mac, options) {
 	this._options = options;
 	this._incomingCodeBuffer = null;
 	this._discardBufferTimeout = null;
+	this._sendingCode = false;
 	this.state = 'disconnected';
 
 	// Create "this" reference for event handlers
@@ -69,8 +70,6 @@ function AnyMote(mac, options) {
 			self._discardBufferTimeout = null;
 		}
 
-		console.log(data);
-
 		var endIdx = data.indexOf(0x00);
 		if (endIdx !== -1)
 		{
@@ -106,6 +105,13 @@ function AnyMote(mac, options) {
 		// Get rid of the peripheral and characteristic references
 		self._characteristics = {};
 		delete self._peripheral;
+		self._incomingCodeBuffer = null;
+		if (self._discardBufferTimeout)
+		{
+			clearTimeout(self._discardBufferTimeout);
+			self._discardBufferTimeout = null;
+		}
+		self._sendingCode = false;
 
 		self.state = 'disconnected';
 		// Emit 'disconnect' event
@@ -145,6 +151,9 @@ function AnyMote(mac, options) {
 
 	this.playPattern = function (freq, pattern, repeat, cb)
 	{
+		if (self._sendingCode)
+			return cb(new Error('Already playing pattern'));
+
 		var encodedPattern = ircode.encodeBLE(pattern);
 		var request = Buffer.concat([new Buffer([0x01, Math.round(freq/250)]), encodedPattern, new Buffer([0, repeat])], 2 + encodedPattern.length + 2);
 
@@ -168,10 +177,15 @@ function AnyMote(mac, options) {
 
 				if ((idx + 1) < buffers.length)
 					doStep(idx + 1);
-				else if (cb)
-					cb(null);
+				else
+				{
+					self._sendingCode = false;
+					if (cb)
+						cb(null);
+				}
 			});
 		}
+		self._sendingCode = true;
 		doStep(0);
 	};
 
